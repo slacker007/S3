@@ -70,7 +70,8 @@ class SecurityEventHandler(xml.sax.ContentHandler):
     def startElement(self, tag, attributes):
         self.CurrentData = tag
         if tag == "Event":
-            print self.evtprops
+            for x in self.evtprops:
+                print x
             raw_input()
             self.evtprops = []
             self.evtprops.append(attributes["xmlns"])

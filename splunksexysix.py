@@ -126,7 +126,6 @@ class SecurityEventHandler(xml.sax.ContentHandler):
             self.Computer = content
         elif self.SubjectLogonId == "SubjectLogonId":
             self.SubjectLogonId = content
-    
 
 def main():
     '''

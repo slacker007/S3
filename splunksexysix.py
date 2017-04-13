@@ -66,6 +66,7 @@ class SecurityEventHandler(xml.sax.ContentHandler):
         self.SubjectUserName = ""
         self.SubjectDomainName = ""
         self.SubjectLogonId = ""
+        self.SubjectUserSid = ""
 
     def startElement(self, tag, attributes):
         self.CurrentData = tag

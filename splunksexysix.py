@@ -66,15 +66,16 @@ class SecurityEventHandler(xml.sax.ContentHandler):
         self.SubjectUserName = ""
         self.SubjectDomainName = ""
         self.SubjectLogonId = ""
-        self.SubjectUserSid = ""
+        self.Data = ""
+        self.Name = ""
 
     def startElement(self, tag, attributes):
         self.CurrentData = tag
         if tag == "Event":
             for x in self.evtprops:
                 print x
-            raw_input()
-            self.evtprops = []
+            #raw_input()
+            del self.evtprops[:]
             self.evtprops.append(attributes["xmlns"])
         elif tag == "TimeCreated":
             spl_time = attributes["SystemTime"].split()
@@ -85,6 +86,21 @@ class SecurityEventHandler(xml.sax.ContentHandler):
         elif tag == "Execution":
             self.evtprops.append(("PID", attributes["ProcessID"]))
             self.evtprops.append(("TID", attributes["ThreadID"]))
+        elif tag == "Security":
+            self.evtprops.append(("UID", attributes["UserID"]))
+        elif tag == "Data":
+            try:
+                self.evtprops.append(attributes["Name"])
+                print ("0: ", self.evtprops[len(self.evtprops) - 1])
+                print len(self.evtprops)
+                raw_input
+                endElement(self, tag)
+            except:
+                print "EXCEPTION RAISED"
+                pass
+        else:
+            pass
+
 
     def endElement(self, tag):
         if self.CurrentData == "Computer":
@@ -105,11 +121,15 @@ class SecurityEventHandler(xml.sax.ContentHandler):
             self.evtprops.append(("ERID", self.EventRecordID))
         elif self.CurrentData == "SubjectLogonId":
             self.evtprops.append(("Sub LID", self.SubjectLogonId))
-        elif self.CurrentData == "SubjectUserSid":
-            self.evtprops.append(("SubjectUserSid", self.SubjectUserSid))
+        elif self.CurrentData == "Data":
+            print ("1 : ", self.evtprops[len(self.evtprops) - 1])
+            self.evtprops.remove(len(self.evtprops))
+            raw_input()
+            self.evtprops.append(("SubjectUserSid", self.Data))
         elif self.CurrentData == "SubjectUserName":
             self.evtprops.append(("SubjectUserName", self.SubjectUserName))
-
+        else:
+            pass
 
     def characters(self, content):
         if self.CurrentData == "Provider":
@@ -130,8 +150,16 @@ class SecurityEventHandler(xml.sax.ContentHandler):
             self.EventRecordID = content
         elif self.CurrentData == "Computer":
             self.Computer = content
-        elif self.SubjectLogonId == "SubjectLogonId":
+        elif self.CurrentData == "SubjectLogonId":
             self.SubjectLogonId = content
+        elif self.CurrentData == "SubjectUserName":
+            self.SubjectUserName = content
+        elif self.CurrentData == "Data":
+            self.Data = content
+        elif self.CurrentData == "Name":
+            self.Name = content
+        else:
+            pass
 
 def main():
     '''

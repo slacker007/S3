@@ -10,3 +10,6 @@ Open Browser: Navigate to http://localhost:7474/browser \
 log in with neo4j as username and neo4j as pw \
 set your custom password with database \
 
+git clone http://www.github.com/williballenthin/python-evtx \
+cd python-evtx/scripts \
+python evtx_dump Security.evtx > Security.xml \

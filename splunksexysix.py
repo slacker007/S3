@@ -91,12 +91,8 @@ class SecurityEventHandler(xml.sax.ContentHandler):
         elif tag == "Data":
             try:
                 self.evtprops.append(attributes["Name"])
-                print ("0: ", self.evtprops[len(self.evtprops) - 1])
-                print len(self.evtprops)
-                raw_input
                 endElement(self, tag)
             except:
-                print "EXCEPTION RAISED"
                 pass
         else:
             pass
@@ -122,10 +118,9 @@ class SecurityEventHandler(xml.sax.ContentHandler):
         elif self.CurrentData == "SubjectLogonId":
             self.evtprops.append(("Sub LID", self.SubjectLogonId))
         elif self.CurrentData == "Data":
-            print ("1 : ", self.evtprops[len(self.evtprops) - 1])
-            self.evtprops.remove(len(self.evtprops))
-            raw_input()
-            self.evtprops.append(("SubjectUserSid", self.Data))
+            temp = self.evtprops[len(self.evtprops) - 1]
+            self.evtprops.remove(temp)
+            self.evtprops.append((temp, self.Data))
         elif self.CurrentData == "SubjectUserName":
             self.evtprops.append(("SubjectUserName", self.SubjectUserName))
         else:

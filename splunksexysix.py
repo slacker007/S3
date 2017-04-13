@@ -76,7 +76,6 @@ class SecurityEventHandler(xml.sax.ContentHandler):
                 print x
             raw_input()
             del self.evtprops[:]
-            self.evtprops.append(attributes["xmlns"])
         elif tag == "TimeCreated":
             spl_time = attributes["SystemTime"].split()
             self.evtprops.append(("TIME", spl_time))

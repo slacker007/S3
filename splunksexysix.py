@@ -74,7 +74,14 @@ class SecurityEventHandler(xml.sax.ContentHandler):
         if tag == "Event":
             for x in self.evtprops:
                 print x
-            raw_input()
+            #raw_input()
+        if len(self.evtprops) > 0:
+            gdb = create_session()
+            
+            secevt = gdb.nodes.create()
+            for x in self.evtprops:
+                secevt[x[0]] = x[1]
+            secevt.labels.add("SecurityEvent")
             del self.evtprops[:]
         elif tag == "TimeCreated":
             spl_time = attributes["SystemTime"].split()
@@ -168,7 +175,7 @@ def main():
     Handler = SecurityEventHandler()
     parser.setContentHandler(Handler)
     parser.parse(args.input)
-    #gdb = create_session()
+    gdb = create_session()
 
     return 0
 

@@ -14,7 +14,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--input", help='Input file in XML format', type=str, required=True)
 args = parser.parse_args()
 
-
 def getXMLfile():
     if os.path.isfile(args.input):
         print 'Found -> %s' % args.input
@@ -45,7 +44,7 @@ def create_session():
 
 class SecurityEventHandler(xml.sax.ContentHandler):
     evtprops = []
-    
+    gdb = create_session()
     def __init__(self):
         self.CurrentData = ""
         self.Provider = ""
@@ -73,16 +72,18 @@ class SecurityEventHandler(xml.sax.ContentHandler):
         self.CurrentData = tag
         if tag == "Event":
             for x in self.evtprops:
-                print x
+                pass
+            #print x
             #raw_input()
-        if len(self.evtprops) > 0:
-            gdb = create_session()
-            
-            secevt = gdb.nodes.create()
-            for x in self.evtprops:
-                secevt[x[0]] = x[1]
-            secevt.labels.add("SecurityEvent")
-            del self.evtprops[:]
+            if len(self.evtprops) > 0:
+                secevt = self.gdb.nodes.create()
+                for x in self.evtprops:
+                    try:
+                        secevt[x[0]] = x[1]
+                    except:
+                        print ("Exception", x)
+                secevt.labels.add("SecurityEvent")
+                del self.evtprops[:]
         elif tag == "TimeCreated":
             spl_time = attributes["SystemTime"].split()
             self.evtprops.append(("TIME", spl_time))

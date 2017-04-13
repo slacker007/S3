@@ -44,6 +44,8 @@ def create_session():
     return gdb
 
 class SecurityEventHandler(xml.sax.ContentHandler):
+    evtprops = []
+    
     def __init__(self):
         self.CurrentData = ""
         self.Provider = ""
@@ -68,37 +70,39 @@ class SecurityEventHandler(xml.sax.ContentHandler):
     def startElement(self, tag, attributes):
         self.CurrentData = tag
         if tag == "Event":
-            print "____________________________"
-            print attributes["xmlns"]
+            print self.evtprops
+            raw_input()
+            self.evtprops = []
+            self.evtprops.append(attributes["xmlns"])
         elif tag == "TimeCreated":
             spl_time = attributes["SystemTime"].split()
-            print ("Sys Time", spl_time)
+            self.evtprops.append(spl_time)
         elif tag == "Provider":
-            print ("Name", attributes["Name"])
-            print ("GUID", attributes["Guid"])
+            self.evtprops.append(("Name", attributes["Name"]))
+            self.evtprops.append(("GUID", attributes["Guid"]))
         elif tag == "Execution":
-            print ("PID", attributes["ProcessID"])
-            print ("TID", attributes["ThreadID"])
+            self.evtprops.append(("PID", attributes["ProcessID"]))
+            self.evtprops.append(("TID", attributes["ThreadID"]))
 
     def endElement(self, tag):
         if self.CurrentData == "Computer":
-            print ("CN", self.Computer)
+            self.evtprops.append(("CN", self.Computer))
         elif self.CurrentData == "EventID":
-            print ("EID", self.EventID)
+            self.evtprops.append(("EID", self.EventID))
         elif self.CurrentData == "Version":
-            print ("Version", self.Version)
+            self.evtprops.append(("Version", self.Version))
         elif self.CurrentData == "Level":
-            print ("Level", self.Level)
+            self.evtprops.append(("Level", self.Level))
         elif self.CurrentData == "Task":
-            print ("Task", self.Task)
+            self.evtprops.append(("Task", self.Task))
         elif self.CurrentData == "Opcode":
-            print ("Opcode", self.Opcode)
+            self.evtprops.append(("Opcode", self.Opcode))
         elif self.CurrentData == "Keywords":
-            print ("KW", self.Keywords)
+            self.evtprops.append(("KW", self.Keywords))
         elif self.CurrentData == "EventRecordID":
-            print ("ERID", self.EventRecordID)
+            self.evtprops.append(("ERID", self.EventRecordID))
         elif self.CurrentData == "SubjectLogonId":
-            print ("Sub LID", self.SubjectLogonId)
+            self.evtprops.append(("Sub LID", self.SubjectLogonId))
 
 
     def characters(self, content):
@@ -122,6 +126,9 @@ class SecurityEventHandler(xml.sax.ContentHandler):
             self.Computer = content
         elif self.SubjectLogonId == "SubjectLogonId":
             self.SubjectLogonId = content
+    
+
+
 '''
 def parseXML(xml_file):
 

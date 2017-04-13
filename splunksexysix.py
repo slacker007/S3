@@ -77,7 +77,7 @@ class SecurityEventHandler(xml.sax.ContentHandler):
             self.evtprops.append(attributes["xmlns"])
         elif tag == "TimeCreated":
             spl_time = attributes["SystemTime"].split()
-            self.evtprops.append(spl_time)
+            self.evtprops.append(("TIME", spl_time))
         elif tag == "Provider":
             self.evtprops.append(("Name", attributes["Name"]))
             self.evtprops.append(("GUID", attributes["Guid"]))
@@ -104,6 +104,10 @@ class SecurityEventHandler(xml.sax.ContentHandler):
             self.evtprops.append(("ERID", self.EventRecordID))
         elif self.CurrentData == "SubjectLogonId":
             self.evtprops.append(("Sub LID", self.SubjectLogonId))
+        elif self.CurrentData == "SubjectUserSid":
+            self.evtprops.append(("SubjectUserSid", self.SubjectUserSid))
+        elif self.CurrentData == "SubjectUserName":
+            self.evtprops.append(("SubjectUserName", self.SubjectUserName))
 
 
     def characters(self, content):

@@ -79,7 +79,7 @@ class SecurityEventHandler(xml.sax.ContentHandler):
                 secevt = self.gdb.nodes.create()
                 for x in self.evtprops:
                     try:
-                        secevt[x[0]] = x[1]
+                        secevt[str(x[0])] = str(x[1])
                     except:
                         print ("Exception", x)
                 secevt.labels.add("SecurityEvent")
@@ -103,7 +103,6 @@ class SecurityEventHandler(xml.sax.ContentHandler):
                 pass
         else:
             pass
-
 
     def endElement(self, tag):
         if self.CurrentData == "Computer":
@@ -169,14 +168,12 @@ def main():
     from evtx using [evtxdump.py] from https://github.com/williballenthin/python-evtx (Thanks!)
     Syntax for evtxdump.py is >> python evtxdump.py yourevents.evtx > yourevents.xml
     '''
-
     getXMLfile()
     parser =xml.sax.make_parser()
     parser.setFeature(xml.sax.handler.feature_namespaces, 0)
     Handler = SecurityEventHandler()
     parser.setContentHandler(Handler)
     parser.parse(args.input)
-    gdb = create_session()
 
     return 0
 

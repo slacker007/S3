@@ -1,4 +1,4 @@
-# S3
+# S3 {Splunk Sexy Six}
 Open Source Windows Security Event Log Correlation and Analysis Tool
 
 sudo docker run --detach --publish=7474:7474 \
